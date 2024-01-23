@@ -9,6 +9,8 @@ const int MAX_THREADS = 100;
 // Function prototypes
 int user_input(int& limit, int& threads);
 int validate_inputs(int limit, int threads);
+int find_primes(int start, int end);
+bool is_prime(int n);
 
 int main()
 {
