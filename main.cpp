@@ -1,20 +1,21 @@
 #include <iostream>
 
-using namespace std;
-
 // Constants
-#define MAX_LIMIT 1000000000
-#define MAX_THREADS 100
+const int MAX_LIMIT = 1000000000;
+const int MAX_THREADS = 100;
+
+// Function prototypes
+int validate_inputs(int limit, int threads);
 
 int main()
 {
     int LIMIT = 0;
     int n_threads = 1;
 
-    cout << "Enter the upper bound for the prime numbers: ";
-    cin >> LIMIT;
-    cout << "Enter the number of threads: ";
-    cin >> n_threads;
+    std::cout << "Enter the upper bound for the prime numbers: ";
+    std::cin >> LIMIT;
+    std::cout << "Enter the number of threads: ";
+    std::cin >> n_threads;
 
     // Input validation
     if (!validate_inputs(LIMIT, n_threads)) return 0;
@@ -39,13 +40,13 @@ int validate_inputs(int limit, int threads)
 {
     if (limit < MAX_LIMIT)
     {
-        cout << "The upper bound must be less than " << MAX_LIMIT << endl;
+        std::cout << "The upper bound must be less than " << MAX_LIMIT << std::endl;
         return 0;
     }
 
     if (threads > MAX_THREADS)
     {
-        cout << "The number of threads must be less than " << MAX_THREADS << endl;
+        std::cout << "The number of threads must be less than " << MAX_THREADS << std::endl;
         return 0;
     }
 
