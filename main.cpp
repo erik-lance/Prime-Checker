@@ -2,6 +2,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <mutex>
 
 // Constants
 const int MAX_LIMIT = 1000000000;
@@ -12,6 +13,9 @@ int user_input(int &limit, int &threads);
 int validate_inputs(int limit, int threads);
 int find_primes(int start, int end);
 bool is_prime(int n);
+
+// Mutex
+std::mutex mtx;
 
 // Thread Object
 class thread_obj
@@ -26,16 +30,10 @@ class thread_obj
 			this->end = end;
 			this->count = 0;
 		}
-
+		
 		void run()
 		{
-			for (int i = start; i <= end; i++)
-			{
-				if (is_prime(i))
-				{
-					count++;
-				}
-			}
+			this->count = find_primes(this->start, this->end);
 		}
 };
 
@@ -188,7 +186,9 @@ int find_primes(int start, int end)
     {
         if (is_prime(i))
         {
+			mtx.lock();
             count++;
+			mtx.unlock();
         }
     }
 
