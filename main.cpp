@@ -32,6 +32,17 @@ int main()
 	 * 3. Implement the computation of the runtime of your algorithm. The timer starts after user input is collected, and the timer stops before printing the number of primes found.
 	 */
 
+	// Start timer
+	auto start = std::chrono::high_resolution_clock::now();
+
+	// End timer
+	auto end = std::chrono::high_resolution_clock::now();
+
+	// Print the number of primes found
+
+	// Print the runtime
+	std::cout << "Runtime: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
+
 	return 0;
 }
 
