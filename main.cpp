@@ -5,8 +5,8 @@
 #include <mutex>
 
 // Constants
-const int MAX_LIMIT = 1000000000;
-const int MAX_THREADS = 100;
+const int MAX_LIMIT = 10000000;
+const int MAX_THREADS = 1024;
 
 // Function prototypes
 int user_input(int &limit, int &threads);
@@ -159,13 +159,13 @@ int validate_inputs(int limit, int threads)
 {
 	if (limit > MAX_LIMIT)
 	{
-		std::cout << "The upper bound must be less than " << MAX_LIMIT << std::endl;
+		std::cout << "The upper bound must be less than or equal to " << MAX_LIMIT << std::endl;
 		return 0;
 	}
 
 	if (threads > MAX_THREADS)
 	{
-		std::cout << "The number of threads must be less than " << MAX_THREADS << std::endl;
+		std::cout << "The number of threads must be less than or equal to" << MAX_THREADS << std::endl;
 		return 0;
 	}
 
