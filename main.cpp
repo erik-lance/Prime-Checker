@@ -17,17 +17,7 @@ int main()
     cin >> n_threads;
 
     // Input validation
-    if (LIMIT < MAX_LIMIT)
-    {
-        cout << "The upper bound must be less than " << MAX_LIMIT << endl;
-        return 0;
-    }
-
-    if (n_threads > MAX_THREADS)
-    {
-        cout << "The number of threads must be less than " << MAX_THREADS << endl;
-        return 0;
-    }
+    if (!validate_inputs(LIMIT, n_threads)) return 0;
 
     /**
      * TODO: Threaded Prime Number Finder
@@ -37,4 +27,27 @@ int main()
     */
 
     return 0;
+}
+
+/**
+ * This simply checks if the inputs are valid based on the constants defined at the start.
+ * @param limit The upper bound for the prime numbers.
+ * @param threads The number of threads to use.
+ * @return 1 if the inputs are valid, 0 otherwise.
+*/
+int validate_inputs(int limit, int threads)
+{
+    if (limit < MAX_LIMIT)
+    {
+        cout << "The upper bound must be less than " << MAX_LIMIT << endl;
+        return 0;
+    }
+
+    if (threads > MAX_THREADS)
+    {
+        cout << "The number of threads must be less than " << MAX_THREADS << endl;
+        return 0;
+    }
+
+    return 1;
 }
