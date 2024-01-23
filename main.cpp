@@ -97,12 +97,12 @@ int validate_inputs(int limit, int threads)
     return 1;
 }
 
-/*
-* This function finds the number of primes in the range [start, end].
-* @param start The start of the range.
-* @param end The end of the range.
-* @return The number of primes in the range [start, end].
-*/
+/**
+ * This function finds the number of primes in the range [start, end].
+ * @param start The start of the range.
+ * @param end The end of the range.
+ * @return The number of primes in the range [start, end].
+ */
 int find_primes(int start, int end)
 {
     int count = 0;
@@ -118,11 +118,11 @@ int find_primes(int start, int end)
     return count;
 }
 
-/*
-* This function checks if a number is prime.
-* @param n The number to check.
-* @return true if the number is prime, false otherwise.
-*/
+/**
+ * This function checks if a number is prime.
+ * @param n The number to check.
+ * @return true if the number is prime, false otherwise.
+ */
 bool is_prime(int n)
 {
     if (n <= 1) return false;
