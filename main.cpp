@@ -80,7 +80,7 @@ int user_input(int& limit, int& threads)
 */
 int validate_inputs(int limit, int threads)
 {
-    if (limit < MAX_LIMIT)
+    if (limit > MAX_LIMIT)
     {
         std::cout << "The upper bound must be less than " << MAX_LIMIT << std::endl;
         return 0;
