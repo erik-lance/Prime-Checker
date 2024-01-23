@@ -2,6 +2,10 @@
 
 using namespace std;
 
+// Constants
+#define MAX_LIMIT 1000000000
+#define MAX_THREADS 100
+
 int main()
 {
     int LIMIT = 0;
@@ -11,6 +15,19 @@ int main()
     cin >> LIMIT;
     cout << "Enter the number of threads: ";
     cin >> n_threads;
+
+    // Input validation
+    if (LIMIT < MAX_LIMIT)
+    {
+        cout << "The upper bound must be less than " << MAX_LIMIT << endl;
+        return 0;
+    }
+
+    if (n_threads > MAX_THREADS)
+    {
+        cout << "The number of threads must be less than " << MAX_THREADS << endl;
+        return 0;
+    }
 
     /**
      * TODO: Threaded Prime Number Finder
