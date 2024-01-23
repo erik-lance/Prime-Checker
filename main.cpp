@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include <vector>
 
 // Constants
 const int MAX_LIMIT = 1000000000;
@@ -12,10 +13,37 @@ int validate_inputs(int limit, int threads);
 int find_primes(int start, int end);
 bool is_prime(int n);
 
+// Thread Object
+class thread_obj
+{
+	public:
+		int start;
+		int end;
+		int count;
+		thread_obj(int start, int end)
+		{
+			this->start = start;
+			this->end = end;
+			this->count = 0;
+		}
+
+		void run()
+		{
+			for (int i = start; i <= end; i++)
+			{
+				if (is_prime(i))
+				{
+					count++;
+				}
+			}
+		}
+};
+
 int main()
 {
 	int LIMIT = 0;
 	int n_threads = 1;
+	int n_primes = 0;
 
 	// Get user input
 	if (!user_input(LIMIT, n_threads))
@@ -35,10 +63,34 @@ int main()
 	// Start timer
 	auto start = std::chrono::high_resolution_clock::now();
 
+	// Create vector of thread objects
+	std::vector<thread_obj> threads;
+	
+	// Create threads
+	for (int i = 0; i < n_threads; i++)
+	{
+		int start = (LIMIT / n_threads) * i;
+		int end = (LIMIT / n_threads) * (i + 1) - 1;
+		threads.push_back(thread_obj(start, end));
+	}
+
+	// Start threads
+	for (int i = 0; i < n_threads; i++)
+	{
+		threads[i].run();
+	}
+
+	// Join threads
+	for (int i = 0; i < n_threads; i++)
+	{
+		n_primes += threads[i].count;
+	}
+
 	// End timer
 	auto end = std::chrono::high_resolution_clock::now();
 
 	// Print the number of primes found
+	std::cout << "Found " << n_primes << " primes in the range [0, " << LIMIT << "]" << std::endl;
 
 	// Print the runtime
 	std::cout << "Runtime: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
