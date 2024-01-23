@@ -81,6 +81,7 @@ int main()
 	// Join threads
 	for (int i = 0; i < n_threads; i++)
 	{
+		// std::cout << "Thread " << i << " found " << threads[i].count << " primes" << std::endl;
 		n_primes += threads[i].count;
 	}
 
@@ -184,12 +185,12 @@ int find_primes(int start, int end)
 
     for (int i = start; i <= end; i++)
     {
+		mtx.lock();
         if (is_prime(i))
         {
-			mtx.lock();
             count++;
-			mtx.unlock();
         }
+		mtx.unlock();
     }
 
     return count;
