@@ -13,38 +13,11 @@ const int MAX_THREADS = 1024;
 // Function prototypes
 int user_input(int &limit, int &threads);
 int validate_inputs(int limit, int threads);
+void prime_counter(int start, int end, std::vector<int> &curPrimes, std::mutex &mtx);
 bool is_prime(int n);
 
 // Mutex
 std::mutex mtx;
-
-// Thread Object
-class thread_obj
-{
-	public:
-		int start;
-		int end;
-		std::vector<int> &curPrimes;
-		std::mutex &mtx;
-		
-		// Constructor
-		thread_obj(int start, int end, std::vector<int> &curPrimes, std::mutex &mtx) : start(start), end(end), curPrimes(curPrimes), mtx(mtx) {}
-		
-		void run()
-		{
-			// Find Primes
-			for (int i = start; i <= end; i++)
-			{
-				if (is_prime(i))
-				{
-					// Add to primes list
-					mtx.lock();
-					curPrimes.push_back(i);
-					mtx.unlock();
-				}
-			}
-		}
-};
 
 int main()
 {
@@ -71,22 +44,21 @@ int main()
 	auto start = std::chrono::high_resolution_clock::now();
 
 	// Create vector of thread objects
-	std::vector<thread_obj> threads;
-	
+	std::vector<std::thread> threads;
+
 	// Create threads
 	for (int i = 0; i < n_threads; i++)
 	{
 		int start = static_cast<int>((LIMIT / static_cast<double>(n_threads)) * i);
-        int end = static_cast<int>((LIMIT / static_cast<double>(n_threads)) * (i + 1)) - 1;
-		threads.push_back(thread_obj(start, end, primes, mtx));
-	}
-
-	// Start threads
-	for (int i = 0; i < n_threads; i++)
-	{
-		threads[i].run();
+		int end = static_cast<int>((LIMIT / static_cast<double>(n_threads)) * (i + 1)) - 1;
+		threads.push_back(std::thread(prime_counter, start, end, std::ref(primes), std::ref(mtx)));
 	}
 	
+	// Join threads
+	for (auto &t : threads)
+	{
+		t.join();
+	}
 
 	// End timer
 	auto end = std::chrono::high_resolution_clock::now();
@@ -177,21 +149,46 @@ int validate_inputs(int limit, int threads)
 }
 
 /**
+ * This function counts the number of primes in the range [start, end].
+ * @param start The start of the range.
+ * @param end The end of the range.
+ * @param curPrimes The list of primes found so far.
+ * @param mtx The mutex to use for mutual exclusion.
+ */
+void prime_counter(int start, int end, std::vector<int> &curPrimes, std::mutex &mtx)
+{
+	// Find Primes
+	for (int i = start; i <= end; i++)
+	{
+		if (is_prime(i))
+		{
+			// Add to primes list
+			std::lock_guard<std::mutex> lock(mtx);
+			curPrimes.push_back(i);
+		}
+	}
+}
+
+/**
  * This function checks if a number is prime.
  * @param n The number to check.
  * @return true if the number is prime, false otherwise.
  */
 bool is_prime(int n)
 {
-    if (n <= 1) return false;
-    if (n <= 3) return true;
+	if (n <= 1)
+		return false;
+	if (n <= 3)
+		return true;
 
-    if (n % 2 == 0 || n % 3 == 0) return false;
+	if (n % 2 == 0 || n % 3 == 0)
+		return false;
 
-    for (int i = 5; i * i <= n; i += 6)
-    {
-        if (n % i == 0 || n % (i + 2) == 0) return false;
-    }
+	for (int i = 5; i * i <= n; i += 6)
+	{
+		if (n % i == 0 || n % (i + 2) == 0)
+			return false;
+	}
 
-    return true;
+	return true;
 }
