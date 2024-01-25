@@ -32,13 +32,6 @@ int main()
 	if (!validate_inputs(LIMIT, n_threads))
 		return 0;
 
-	/**
-	 * TODO: Threaded Prime Number Finder
-	 * 1. Implement threading to split the range of integers across the specified number of threads.
-	 * 2. Implement mutual exclusion for the `primes` list.
-	 * 3. Implement the computation of the runtime of your algorithm. The timer starts after user input is collected, and the timer stops before printing the number of primes found.
-	 */
-
 	// Start timer
 	auto start = std::chrono::high_resolution_clock::now();
 
