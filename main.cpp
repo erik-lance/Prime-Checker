@@ -4,7 +4,6 @@
 #include <thread>
 #include <vector>
 #include <mutex>
-#include <cmath>
 
 // Constants
 const int MAX_LIMIT = 10000000;
