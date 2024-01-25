@@ -68,6 +68,10 @@ int main()
 	// Print the runtime
 	std::cout << "Runtime: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
 
+	// Press enter to continue
+	std::cout << "Press ENTER to exit...";
+	std::cin.ignore();
+
 	return 0;
 }
 
