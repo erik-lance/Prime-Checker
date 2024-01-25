@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include <mutex>
+#include <cmath>
 
 // Constants
 const int MAX_LIMIT = 10000000;
@@ -75,8 +76,8 @@ int main()
 	// Create threads
 	for (int i = 0; i < n_threads; i++)
 	{
-		int start = (LIMIT / n_threads) * i;
-		int end = (LIMIT / n_threads) * (i + 1) - 1;
+		int start = static_cast<int>((LIMIT / static_cast<double>(n_threads)) * i);
+        int end = static_cast<int>((LIMIT / static_cast<double>(n_threads)) * (i + 1)) - 1;
 		threads.push_back(thread_obj(start, end, primes, mtx));
 	}
 
