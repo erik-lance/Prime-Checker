@@ -11,7 +11,6 @@ const int MAX_THREADS = 1024;
 // Function prototypes
 int user_input(int &limit, int &threads);
 int validate_inputs(int limit, int threads);
-int find_primes(int start, int end);
 bool is_prime(int n);
 
 // Mutex
@@ -23,17 +22,25 @@ class thread_obj
 	public:
 		int start;
 		int end;
-		int count;
-		thread_obj(int start, int end)
-		{
-			this->start = start;
-			this->end = end;
-			this->count = 0;
-		}
+		std::vector<int> &curPrimes;
+		std::mutex &mtx;
+		
+		// Constructor
+		thread_obj(int start, int end, std::vector<int> &curPrimes, std::mutex &mtx) : start(start), end(end), curPrimes(curPrimes), mtx(mtx) {}
 		
 		void run()
 		{
-			this->count = find_primes(this->start, this->end);
+			// Find Primes
+			for (int i = start; i <= end; i++)
+			{
+				if (is_prime(i))
+				{
+					// Add to primes list
+					mtx.lock();
+					curPrimes.push_back(i);
+					mtx.unlock();
+				}
+			}
 		}
 };
 
@@ -41,7 +48,7 @@ int main()
 {
 	int LIMIT = 0;
 	int n_threads = 1;
-	int n_primes = 0;
+	std::vector<int> primes;
 
 	// Get user input
 	if (!user_input(LIMIT, n_threads))
@@ -69,7 +76,7 @@ int main()
 	{
 		int start = (LIMIT / n_threads) * i;
 		int end = (LIMIT / n_threads) * (i + 1) - 1;
-		threads.push_back(thread_obj(start, end));
+		threads.push_back(thread_obj(start, end, primes, mtx));
 	}
 
 	// Start threads
@@ -77,19 +84,13 @@ int main()
 	{
 		threads[i].run();
 	}
-
-	// Join threads
-	for (int i = 0; i < n_threads; i++)
-	{
-		// std::cout << "Thread " << i << " found " << threads[i].count << " primes" << std::endl;
-		n_primes += threads[i].count;
-	}
+	
 
 	// End timer
 	auto end = std::chrono::high_resolution_clock::now();
 
 	// Print the number of primes found
-	std::cout << "Found " << n_primes << " primes in the range [0, " << LIMIT << "]" << std::endl;
+	std::cout << "Found " << primes.size() << " prime numbers" << std::endl;
 
 	// Print the runtime
 	std::cout << "Runtime: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() << "ms" << std::endl;
@@ -171,29 +172,6 @@ int validate_inputs(int limit, int threads)
 	}
 
 	return 1;
-}
-
-/**
- * This function finds the number of primes in the range [start, end].
- * @param start The start of the range.
- * @param end The end of the range.
- * @return The number of primes in the range [start, end].
- */
-int find_primes(int start, int end)
-{
-    int count = 0;
-
-    for (int i = start; i <= end; i++)
-    {
-		mtx.lock();
-        if (is_prime(i))
-        {
-            count++;
-        }
-		mtx.unlock();
-    }
-
-    return count;
 }
 
 /**
